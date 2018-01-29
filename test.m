@@ -52,7 +52,7 @@ trainingDataSize = size(shuffledData,1)*trainPercent;
 trainData = shuffledData(1:trainingDataSize,:);
 testData = shuffledData((trainingDataSize+1):end,:);
 
-N_TRAINDATA=trainPercent*2*N_DATA_PER_CLASS
+N_TRAINDATA=trainPercent*2*N_DATA_PER_CLASS;
 % 1. Select random sample from training set as input
 %trainData = trainingData_label(:,1:2);
 %trainLabel = trainingData_label(:,3:3);
@@ -72,7 +72,7 @@ W=zeros(1,3);
 x_axis=-5:0.1:5;
 
 for i=1:20
-    dW= -Eta*(W*X-T)*X'
+    dW= -Eta*(W*X-T)*X';
     %if(dW<0 && )
     W=W+dW;
     y_axis=-W(1)*x_axis/W(2)-W(3)/W(2);
@@ -90,19 +90,39 @@ end
 %Size of Hidden Layer
 N_HIDDEN=3;
 N_OUTPUTS=1;
-
-%Forward Pass
 W=zeros(N_HIDDEN,3);
-H_in=W*X;
-H=[Phi(H_in); ones(1,N_TRAINDATA)];
-V=zeros(N_OUTPUTS, N_HIDDEN+1);
-O_in=V*H;
-O=Phi(O_in);
-
-%Backward Pass
-
-Delta_O = (O-T).*dPhi(O);
-Delta_H = (V'*Delta_O).*dPhi(H_in);
+V=zeros(N_OUTPUTS, N_HIDDEN+1); 
+W = normrnd(0,1,[N_HIDDEN 3])
+V = normrnd(0,1,[N_OUTPUTS N_HIDDEN+1])
+alpha = 0.9;     
+dw = zeros(size(W));
+dv = zeros(size(V));
+epochs = 20;
+eta = 0.0001;
 
 
- 
+
+delta_o = (O-T).*((1+O) .*(1-O))*0.5;
+delta_h = (V' * delta_o) .* ((1+H) .* (1-H))*0.5;
+delta_h = delta_h(1:N_HIDDEN, :);
+for epoch = 1:epochs
+    H_in=W*X;        
+    H=[Phi(H_in); ones(1,N_TRAINDATA)];
+    O_in=V*H;       
+    O=Phi(O_in);    
+    delta_o = (O-T).*((1+O) .*(1-O))*0.5;
+    delta_h = (V' * delta_o) .* ((1+H) .* (1-H))*0.5;
+    delta_h = delta_h(1:N_HIDDEN, :);
+    dw = (dw .* alpha) - (delta_h * O') .* (1-alpha);
+    dv = (dv .* alpha) - (delta_o * H') .* (1-alpha);
+    W = W + dw .* eta;
+    V = V + dv .* eta;
+end
+
+
+
+
+
+
+
+

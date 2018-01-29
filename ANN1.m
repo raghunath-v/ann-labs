@@ -4,7 +4,7 @@
 rng default
 
 % class 1
-mu_1 = [5, 5];
+mu_1 = [3, 3];
 sigma_1 = [1, -1.5; -1.5, 10];
 c_1 = mvnrnd(mu_1, sigma_1, 100);
 c_1_size = size(c_1);
@@ -14,7 +14,7 @@ c_1 = [c_1 c1_label]; % the third column is the label
 c_1(2, 2);           % (x_index, y_index)
 
 % class 2
-mu_2 = [-5, -5];
+mu_2 = [-3, -3];
 sigma_2 = [1, 1.5; 1.5, 10];
 c_2 = mvnrnd(mu_2, sigma_2, 100);
 c_2_size = size(c_2);
@@ -25,9 +25,6 @@ c_2 = [c_2 c2_label];
 data = [c_1; c_2];
 shuffledData = data(randperm(size(data,1)), :);
 
-hold all
-plot(c_1(:, 1), c_1(:,2), 'o');
-plot(c_2(:, 1), c_2(:,2), '+');
 
 % 3.1.2
 % How quickly do the algorithms converge? 
@@ -47,51 +44,52 @@ testData = shuffledData((trainingDataSize+1):shuffleSize(1),:);
 
 % 1. Select random sample from training set as input
 trainData = trainingData_label(:,1:2);
+trainData = [ones(trainingDataSize,1) trainingData_label(:,1:2)];
 trainLabel = trainingData_label(:,3:3);
 
 % 2. If classification is correct, do nothing
-eta = 0.1;
-delta_w = eta*trainData;
-% a = size(trainData)
-thredshold = [0, 0];
-% the dimension is: W*x = y      2x2 * 2x140 = 2x140 
-w = zeros(2, 2);
-output = w*transpose(trainData);
-%size(result)
-output = transpose(output);
-size_output = size(output);
-size_output(1)          % 140
-size_output(2)          % 2
-%x = 0
+% the dimension is: W*x = y      1x2 * 2x140 = 1x140 
 
+% initialize the values
+w = zeros(1, 3);
+delta_w = zeros(1, 3);
+output = 0;
+eta = 0.00001;
+thredshold = 0;
+epochs = 10;
 % for the sequential
-for y = 1:size(trainLabel)
-    
-    for param = 1:size_output(2)
-        % if the output is higher than thredshold and y is 
-       % if (output(y,param) >= 0) && (trainLabel(y)==-1)
-        %    delta_w = -eta*train;
-           
-            
-      %  end 
+
+
+for epoch = 1:epochs
+    for y = 1:size(trainLabel)
+        % if result is 0 and label is 1
+        output = w*trainData(y,:)';
+        w = w+delta_w;
+
+        if (output < thredshold) && (trainLabel(y)==1)
+            delta_w = eta*trainData(y,:);
+
+        end
+
+        if (output >= thredshold) && (trainLabel(y)==-1)
+            delta_w = -eta*trainData(y,:);
+        end
     end
-    %if result(y)<thredshold
-    %if result(y,:) < thredshold
-    % end
+    w = w/140
     
 end
-%x
+w
 
-% a = output(1,:) < thredshold
 
-output(1,:)
-trainLabel(3)
+hold all
+plot(c_1(:, 1), c_1(:,2), 'o');
+plot(c_2(:, 1), c_2(:,2), '+');
+x = -10:10;
+y = w(1)/w(3) - w(2)/w(3)*x;
+plot(x,y, 'r')
+%plot(w(2), w(3), 'r');
 
-%{
-predict = act_f(y)
-if (predict == label(index))
-    % do nothing
-end
 
-else 
-%}
+
+
+
