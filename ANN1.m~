@@ -37,7 +37,7 @@ plot(c_2(:, 1), c_2(:,2), '+');
 
 % TODO, make trainingdata integer.
 
-
+%{
 trainProcent = 0.7;
 shuffleSize = size(shuffledData);
 trainingDataSize = shuffleSize(1)*trainProcent;
@@ -60,8 +60,8 @@ output = w*transpose(trainData);
 %size(result)
 output = transpose(output);
 size_output = size(output);
-size_output(1)          % 140
-size_output(2)          % 2
+size_output(1)
+size_output(2)
 %x = 0
 
 % for the sequential
