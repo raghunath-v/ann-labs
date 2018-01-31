@@ -97,14 +97,15 @@ V = normrnd(0,1,[N_OUTPUTS N_HIDDEN+1])
 alpha = 0.9;     
 dw = zeros(size(W));
 dv = zeros(size(V));
-epochs = 20;
+epochs = 200;
 eta = 0.0001;
 
 
-
+%{
 delta_o = (O-T).*((1+O) .*(1-O))*0.5;
 delta_h = (V' * delta_o) .* ((1+H) .* (1-H))*0.5;
 delta_h = delta_h(1:N_HIDDEN, :);
+%}
 for epoch = 1:epochs
     H_in=W*X;        
     H=[Phi(H_in); ones(1,N_TRAINDATA)];
@@ -117,6 +118,7 @@ for epoch = 1:epochs
     dv = (dv .* alpha) - (delta_o * H') .* (1-alpha);
     W = W + dw .* eta;
     V = V + dv .* eta;
+    
 end
 
 
