@@ -1,4 +1,6 @@
 % 3.1 Assignment
+clear all
+close all
 
 DEBUG_MODE=[0 1];
 N_DATA_PER_CLASS=100;
@@ -90,8 +92,8 @@ end
 %Size of Hidden Layer
 N_HIDDEN=3;
 N_OUTPUTS=1;
-W=zeros(N_HIDDEN,3);
-V=zeros(N_OUTPUTS, N_HIDDEN+1); 
+%W=zeros(N_HIDDEN,3);
+%V=zeros(N_OUTPUTS, N_HIDDEN+1); 
 W = normrnd(0,1,[N_HIDDEN 3])
 V = normrnd(0,1,[N_OUTPUTS N_HIDDEN+1])
 alpha = 0.9;     
@@ -102,9 +104,9 @@ eta = 0.0001;
 
 
 
-delta_o = (O-T).*((1+O) .*(1-O))*0.5;
-delta_h = (V' * delta_o) .* ((1+H) .* (1-H))*0.5;
-delta_h = delta_h(1:N_HIDDEN, :);
+% delta_o = (O-T).*((1+O) .*(1-O))*0.5;
+% delta_h = (V' * delta_o) .* ((1+H) .* (1-H))*0.5;
+% delta_h = delta_h(1:N_HIDDEN, :);
 for epoch = 1:epochs
     H_in=W*X;        
     H=[Phi(H_in); ones(1,N_TRAINDATA)];
@@ -113,13 +115,13 @@ for epoch = 1:epochs
     delta_o = (O-T).*((1+O) .*(1-O))*0.5;
     delta_h = (V' * delta_o) .* ((1+H) .* (1-H))*0.5;
     delta_h = delta_h(1:N_HIDDEN, :);
-    dw = (dw .* alpha) - (delta_h * O') .* (1-alpha);
+    dw = (dw .* alpha) - (delta_h * X') .* (1-alpha);
     dv = (dv .* alpha) - (delta_o * H') .* (1-alpha);
     W = W + dw .* eta;
     V = V + dv .* eta;
 end
 
-
+O
 
 
 
