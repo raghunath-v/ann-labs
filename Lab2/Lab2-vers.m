@@ -45,7 +45,7 @@ output = sign(Phi*W);
 
 error = abs(target-output);
 avgError = mean(error);
-disp("Mean error: "+ avgError);
+disp('Mean error: '+ avgError);
 
 % Test on hold-out set
 PhiTest=zeros(numel(xTest),units);
@@ -58,7 +58,7 @@ end
 output = PhiTest*W;
 error = abs(testTarget-output);
 avgError = mean(error);
-disp("Mean error on hold-out set: "+ avgError);
+disp('Mean error on hold-out set: '+ avgError);
 
 
 %% Gaussian RBF Batchlearning Delta rule
@@ -115,7 +115,7 @@ for n = 1:epoch
     avgError = mean(error);
     disp(avgError)
     if (avgError < 0.1)
-        disp("Number of iterations: " + n);
+        disp('Number of iterations: ' + n);
         break;
     end
 end
@@ -131,7 +131,7 @@ end
 output = PhiTest*W;
 error = abs(testTarget-output);
 avgError = mean(error);
-disp("Mean error on hold-out set: "+ avgError);
+disp('Mean error on hold-out set: '+ avgError);
 
 %% Gaussian RBF sequential learning Delta rule
 clc; close all; clear;
@@ -187,7 +187,7 @@ for n = 1:epoch
     avgError = mean(error);
     disp(avgError)
     if (avgError < 0.1)
-        disp("Number of iterations: " + n);
+        disp('Number of iterations: ' + n);
         break;
     end
 end
@@ -203,7 +203,7 @@ end
 output = PhiTest*W;
 error = abs(testTarget-output);
 avgError = mean(error);
-disp("Mean error on hold-out set: "+ avgError)
+disp('Mean error on hold-out set: '+ avgError)
 
 
 
