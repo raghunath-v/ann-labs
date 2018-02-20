@@ -1,44 +1,53 @@
 %% Gaussian RBF Batchlearning
 clc; close all; clear;
 
-units = 11;
+units = 1000;
+
 
 xTrain = 0:0.1:2*pi;
 xTest = 0.05:0.1:2*pi;
 
 sinTrainTarget = sin(2*xTrain);
 squareTrainTarget = square(2*xTrain);
+train_size=length(sinTrainTarget);
 
 sinTestTarget = sin(2*xTest);
 squareTestTarget = square(2*xTest);
 %plot( xTrain, squareTrainTarget);
 Phi = zeros(1,units);
-W = rand(1,units);
+W = rand(1,units)';
 mu = 0.5;
 var = 0.5;
 sDev = sqrt(var);
-eta = 0.1;
+eta = 0.001;
+max_error = 0.1;
 
 epoch = 10000;
 
-Phi = exp(-(xTrain-mu).^2/(2*sDev^2));
+xTrainMat = repmat(xTrain,[units,1])';
+muMat = repmat(rand(1,units),[train_size, 1]);
+%sDev = sqrt(0.5)*ones(size(xTrainMat));
+
+Phi = exp(-(xTrainMat-muMat).^2/(2*sDev^2));
 %output = sum(Phi'*W, 2);
 
 
-oldW = zeros(1,units);
+%oldW = zeros(1,units);
 for n = 1:epoch
-    output = zeros(1,units);
-    Phi = exp(-(xTrain-mu).^2/(2*sDev^2));
-    output = sum(Phi'*W, 2);
-    dW = -eta*(output'-sinTrainTarget)*Phi';
-    W = W + dW;
-    V = output' - sinTrainTarget;
-    error = sum(V)/length(V);
-    if (error < 0.1)
+    %output = zeros(1,units);
+    %Phi = exp(-(xTrain-mu).^2/(2*sDev^2));
+    output = Phi*W;
+    dW = -eta*(output-sinTrainTarget')'*Phi;
+    W = W + dW';
+    V = (output - sinTrainTarget').^2;
+    error = sum(V)/length(V)
+    if (error < max_error)
         disp('Number of iterations:');
         disp(n);
         break;
     end
+    %plot(output)
+    %pause
     oldW = W;
 end
 
