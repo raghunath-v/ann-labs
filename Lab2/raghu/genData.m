@@ -7,6 +7,10 @@ function [] = genData()
     squareTestTarget = square(2*xTest);
     train_size=length(sinTrainTarget);
     test_size = length(sinTestTarget);
+    noise = normrnd(0, sqrt(0.1), size(xTrain));
+    sinTrainTarget_noisy = sinTrainTarget + noise;
+    noise = normrnd(0, sqrt(0.1), size(xTest));
+    sinTestTarget_noisy = sinTestTarget + noise;
     
     save('data.mat')
 end

@@ -1,32 +1,60 @@
-function out = dPhi(x)
-    out = (1+Phi(x)) .* (1-Phi(-x)) / 2;
-end
-
-function out = Phi(x)
-    out = 2./ (1+exp(-x))-1;
-end
-
-function out = perceptron2(X)
-    N_HIDDEN=3; %Size of Hidden Layer
-    N_OUTPUTS=1;
-    W = normrnd(0,1,[N_HIDDEN 3]);
+function out = perceptron2(X,T)
+    %Parameters
+    N_FEATURES = 1;
+    N_TRAINDATA = length(X);
+    N_HIDDEN = 20; %Size of Hidden Layer
+    N_OUTPUTS = 1;
+    alpha = 0.7; %Momentum
+    Eta =0.01; % Learning Rate
+    MaxEpochs = 1000;
+    %W=zeros(N_HIDDEN,3);
+    %V=zeros(N_OUTPUTS, N_HIDDEN+1); 
+    W = normrnd(0,1,[N_HIDDEN N_FEATURES+1]);
     V = normrnd(0,1,[N_OUTPUTS N_HIDDEN+1]);
-    alpha = 0.9;     
-    dw = zeros(size(W));
-    dv = zeros(size(V));
-    MAX_EPOCHS = 1000;
-    eta = 0.01;
-    for epoch = 1:MAX_EPOCHS
-        H_in=W*X;        
-        H=[Phi(H_in); ones(1,N_TRAINDATA)];
-        O_in=V*H;       
-        O=Phi(O_in);    
-        delta_o = (O-T).*((1+O) .*(1-O))*0.5;
-        delta_h = (V' * delta_o) .* ((1+H) .* (1-H))*0.5;
-        delta_h = delta_h(1:N_HIDDEN, :);
-        dw = (dw .* alpha) - (delta_h * X') .* (1-alpha);
-        dv = (dv .* alpha) - (delta_o * H') .* (1-alpha);
-        W = W + dw .* eta;
-        V = V + dv .* eta;
+    delW = zeros(size(W));
+    delV = zeros(size(V));
+    out = MaxEpochs;
+    
+    %Add bias
+    bias = ones(size(X(:,1)))';
+    X= [X'; bias];
+    T=T';
+    for i=1:MaxEpochs
+        %Forward Pass
+        Hin=W*X;
+        H=[func_phi(Hin); ones(1,N_TRAINDATA)];
+        Oin=V*H;
+        O=func_phi(Oin)
+
+        %Backward pass
+        delO=(O-T).*func_dPhi(O);
+        delH=(V'*delO).*func_dPhi(H);
+        delH=delH(1:N_HIDDEN,:);
+
+        %Weight Update
+        delW=delH*X';
+        delV=delO*H';
+        %delW = (delW .* alpha) - (delH * X') .* (1-alpha);
+        %delV = (delV .* alpha) - (delO * H') .* (1-alpha);
+        W = W + delW .* Eta;
+        V = V + delV .* Eta;
+  
+        %Training Evaluation        
+        Hin_train=W*X;
+        H_train=[func_phi(Hin_train); ones(1,length(X))];
+        Oin_train=V*H_train;
+        O_train=func_phi(Oin_train);
+        errorTrain=sum((O_train-T).^2);
+        if (errorTrain < 0.1)
+            break
+        end
     end
+end
+
+function out = func_dPhi(x)
+    out = (1+func_phi(x)) .* (1-func_phi(-x)) / 2;
+end
+
+function out = func_phi(x)
+    out = 2./(1+exp(-x))-1;
 end
