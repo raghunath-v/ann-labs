@@ -43,7 +43,6 @@ load cities.dat
 nodes = 10;
 attributes = 2;
 eta = 0.2;
-%props = reshape(cities,attributes,length(animals)/attributes)';
 props=cities;
 weights = double(rand(nodes,attributes)>0.5);
 dist_list = zeros(nodes,10);
@@ -58,8 +57,6 @@ for epoch = 1:MAX_EPOCHS
         idx = mod(10+idx-1,10)+1;
         weights(idx,:) = weights(idx,:) + eta*(diff(idx,:));
         dist_list(:,city) = dist;
-        %plot(dist_list(:,[2,11,18]))
-        %pause(0.1)
     end
 end
 
@@ -79,3 +76,40 @@ scatter(cities(:,1),cities(:,2),100,'fill','blue')
 line(new_cities(:,1),new_cities(:,2))
 scatter(weights(:,1),weights(:,2),'d','red','fill')
 
+%% Section 4.3
+%Analysing voter behaviour
+clear all;clc;close all
+load votes.dat
+
+nodes = 100;
+attributes = 31;
+eta = 0.2;
+props = reshape(votes,attributes,length(votes)/attributes)';
+weights = double(rand(nodes,attributes)>0.5);
+dist_list = zeros(nodes,10);
+MAX_EPOCHS = 20;
+for epoch = 1:MAX_EPOCHS
+    for voter = 1:
+        diff = repmat(props(voter,:),[nodes,1])-weights;
+        dist = sqrt(sum((diff).^2,2));
+        [bestDist, bestInd] = min(dist);
+        neib_size = (3-round(((3/MAX_EPOCHS)*epoch)^2));
+        idx=(bestInd-neib_size:bestInd+neib_size)';
+        idx = mod(10+idx-1,10)+1;
+        weights(idx,:) = weights(idx,:) + eta*(diff(idx,:));
+        dist_list(:,voter) = dist;
+        %plot(dist_list(:,[2,11,18]))
+        %pause(0.1)
+    end
+end
+
+
+order = [];
+for voter = 1:10
+    testdiff = repmat(props(voter,:),[nodes,1])-weights;
+    testdist = sqrt(sum((testdiff).^2,2));
+    [bestDist,idx] = min(testdist);
+    order = [order;idx];
+end
+[index, city_order] = sort(order,'ascend');
+new_cities=cities(city_order,:);
