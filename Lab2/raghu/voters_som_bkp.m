@@ -40,4 +40,4 @@ end
 voter_party=mpparty(voter_order,:);
 voter_gender=mpsex(voter_order,:);
 voter_district=mpdistrict(voter_order,:);
-plot(voter_party)
+plot(voter_district)

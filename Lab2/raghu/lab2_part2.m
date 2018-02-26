@@ -117,8 +117,9 @@ for voter = 1:num_voters
     [bestDist,idx] = min(testdist);
     order = [order;idx];
 end
-[index, voter_order] = sort(order,'ascend');
+%[index, voter_order] = sort(order,'ascend');
 voter_party=mpparty(voter_order,:);
 voter_gender=mpsex(voter_order,:);
 voter_district=mpdistrict(voter_order,:);
 plot(voter_party)
+r
