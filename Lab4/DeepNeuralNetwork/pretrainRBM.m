@@ -136,6 +136,8 @@ if( Verbose )
     timer = tic;
 end
 
+rbm.errorPlot = [];
+
 for iter=1:MaxIter
 
     
@@ -242,6 +244,7 @@ for iter=1:MaxIter
         aveti = totalti / iter;
         estti = (MaxIter-iter) * aveti;
         eststr = datestr(datenum(0,0,0,0,0,estti),'DD:HH:MM:SS');
+        rbm.errorPlot = [rbm.errorPlot; [iter rmse]];
         
 		fprintf( '%3d : %9.4f %9.4f %9.4f %s\n', iter, rmse, mean(H(:)), aveti, eststr );
     end
