@@ -9,3 +9,7 @@ Lab4/targetdigit_trn.csv
 Lab4/bindigit_tst.csv
 Lab4/bindigit_trn.csv
 Lab4/lab4.asv
+Lab4/DeepNeuralNetwork/train-labels-idx1-ubyte
+Lab4/DeepNeuralNetwork/train-images-idx3-ubyte
+Lab4/DeepNeuralNetwork/t10k-labels-idx1-ubyte
+Lab4/DeepNeuralNetwork/t10k-images-idx3-ubyte
